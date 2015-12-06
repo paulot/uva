@@ -4,6 +4,14 @@
 
 using namespace std;
 
+/**
+ * The idea of this algorithm is to minimize the possible price to reach
+ * the destination, under the constraint that the time to reach the destination
+ * is smaller than t. 
+ *
+ * To solve it, we run a dfs with dp to speed-up
+ */
+
 typedef pair<int, int> ii;
 
 int times[51][51], toll[51][51], n, t, dptime[51][1001], dpprice[51][1001];
