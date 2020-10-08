@@ -1,30 +1,27 @@
 #include <iostream>
+#include <cmath>
+#include <cstdio>
 #include <algorithm>
-#include <iomanip>
 
 using namespace std;
 
-int back[10], front[10];
-double ratios[100];
+int front[11], nf, back[11], nb, nr;
+double ratios[200];
 
 int main() {
-  int b, f;
-  while (cin >> b) {
-    if (b == 0) return 0;
-    cin >> f;
-    for (int i = 0; i < b; i++) cin >> back[i];
-    for (int i = 0; i < f; i++) cin >> front[i];
+  while (cin >> nf and nf) { cin >> nb;
+    for (int i = 0; i < nf; i++) cin >> front[i];
+    for (int i = 0; i < nb; i++) cin >> back[i];
+    nr = 0;
+    for (int i = 0; i < nf; i++) for (int j = 0; j < nb; j++) {
+      ratios[nr++] = ((double) back[j]) / front[i];
+    }
 
-    int n = b * f, ir = 0;
-    for (int i = 0; i < b; i++)
-    for (int j = 0; j < f; j++)
-      ratios[ir++] = front[j] / ((double) back[i]);
+    sort(ratios, ratios + nr);
 
-    sort(ratios, ratios+n);
-
-    double m = 0;
-    for (int i = 1; i < n; i++) m = max(m, ratios[i]/ratios[i-1]);
-
-    cout << fixed << setprecision(2) << m << endl;
+    int best = 0;
+    for (int i = 1; i < nr; i++) best = max(best, (int) round(((ratios[i] / ratios[i - 1]) * 100)));
+    printf("%.2f\n", (best / 100.0));
   }
+  return 0;
 }

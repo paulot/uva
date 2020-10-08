@@ -1,30 +1,31 @@
 #include <iostream>
-#include <limits.h>
 
 using namespace std;
 
-int ntc, n, arr[20001];
+int n, t;
 
 int main() {
-  cin >> ntc;
-  for (int tc = 1; tc <= ntc; tc++) {
+  cin >> t;
+  for (int rr = 1; rr <= t; rr++) {
     cin >> n;
-    for (int i = 0; i < n-1; i++) cin >> arr[i];
-
-    int gsum = INT_MIN, sum = 0, gf = 0, gl = 0, f = 0;
-    for (int i = 0; i < n-1; i++) {
-      sum += arr[i];
-      if (sum > gsum or (sum == gsum and i-f > gf - gl))
-        gsum = sum, gf = f, gl = i;
-
-      if (sum < 0)
-        f = i+1, sum = 0;
+    int in, start = 0, end = 0, best = -99999999, c = 0, bs = 0;
+    for (int i = 0; i < n - 1; i++) {
+      cin >> in;
+      c += in;
+      if (c < 0) {
+        c = 0;
+        start = i + 1;
+      }
+      if (c > best or (best == c and i - start > end - bs)) {
+        best = c;
+        bs = start;
+        end = i;
+      }
     }
-
-    if (gsum < 0) cout << "Route " << tc << " has no nice parts" << endl;
-    else cout << "The nicest part of route " << tc << " is between stops " 
-              << gf + 1 << " and " << gl + 2 << endl;
+    if (best > 0)
+      cout << "The nicest part of route " << rr << " is between stops " << bs + 1 << " and " << end + 2 << endl;
+    else cout << "Route " << rr << " has no nice parts" << endl;
   }
   return 0;
 }
-  
+      

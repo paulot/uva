@@ -1,59 +1,56 @@
 #include <iostream>
+#include <cstring>
 #include <cmath>
 #include <cstdio>
 
 using namespace std;
 
-bool ucol[9];
-int row[9];
-int tc, sol;
+int row[9], tc, placed, soln = 1, sc, sr;
 
-bool is_gucci(int r, int c) {
+bool canPlace(int c, int r) {
+  if (row[c] != 0) return false; // There is something already in that column
+  // Check if row is clear
   for (int i = 1; i <= 8; i++)
-    if (row[i] != 0 and r != i and row[i] != c and
-        abs(r-i) == abs(c-row[i])) return false;
+    if (row[i] != 0 and (row[i] == r or abs(r - row[i]) == abs(c - i))) return false;
   return true;
 }
 
-void dfs(int r) {
-  if (r == 9) {
-    // We got an answer
-    printf("%2d      ", sol++);
-    for (int i = 1; i <= 8; i++) {
-      cout << row[i];
-      if (i != 8) cout << ' ';
-    }
+void place(int col) {
+  if (placed == 8) {
+    printf("%2d      ", soln++); for (int i = 1; i <= 8; i++) { cout << row[i]; if (i != 8) cout << ' '; }
     cout << endl;
-    return;
-  }
-  if (row[r] == 0) {
-    for (int c = 1; c <= 8; c++) {
-      if (not ucol[c] and is_gucci(r, c)) {
-        row[r] = c;
-        ucol[c] = true;
-        dfs(r+1);
-        row[r] = 0;
-        ucol[c] = false;
+  } else if (col == sc) place(col + 1);
+  else {
+    for (int r = 1; r <= 8; r++)
+      if (canPlace(col, r)) {
+        placed++;
+        row[col] = r;
+        place(col + 1);
+        row[col] = 0;
+        placed--;
       }
-    }
-  } else dfs(r+1);
+  }
 }
-int main() {
-  int n; cin >> n;
-  for (tc = 1; tc <= n; tc++) {
-    for (int i = 1; i <= 8; i++) {
-      row[i] = 0;
-      ucol[i] = false;
-    }
-    int r, c; cin >> c >> r;
-    sol = 1;
-    row[r] = c;
-    ucol[c] = true;
 
-    printf("SOLN       COLUMN\n");
-    printf(" #      1 2 3 4 5 6 7 8\n\n");
-    dfs(1);
-    if (tc != n) cout << endl;
+int main() {
+  cin >> tc;
+  while (tc--) {
+    soln = placed = 1;
+    cin >> sr >> sc;
+    row[sc] = sr;
+    cout << "SOLN       COLUMN" << endl;
+    cout << " #      1 2 3 4 5 6 7 8" << endl << endl;
+    place(1);
+    if (tc != 0) cout << endl;
+    memset(row, 0, sizeof(row));
+    /*
+    for (int i = 1; i <= 8; i++) cout << row[i] << endl;
+    for (int i = 1; i <= 8; i++) {
+      for (int j = 1; j <= 8; j++)
+        cout << canPlace(i, j) << ' ';
+      cout << endl;
+    }
+    */
   }
   return 0;
 }

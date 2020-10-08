@@ -1,41 +1,37 @@
 #include <iostream>
 #include <cmath>
+#define inf 99999999
 
 using namespace std;
 
-int m = 1e6, n;
-int xs[10], ys[10];
-int sx, sy;
-bool picked[10];
+int beepers[100][2], starti, startj, n, m, tc, nb, best, ncaptured;
+bool captured[100];
 
-void dfs(int x, int y, int p, int dist) {
-  // cout << x << ' ' << y << ' ' << p << ' ' << dist << endl;
-  if (p == n) {
-    int d = abs(x-sx) + abs(y-sy);
-    m = min(dist + d, m);
-    return;
-  }
+int distance(int ii, int ij, int ei, int ej) {
+  return abs(ii - ei) + abs(ij - ej);
+}
 
-  for (int i = 0; i < n; i++) {
-    if (not picked[i]) {
-      picked[i] = true;
-      int d = abs(x-xs[i]) + abs(y-ys[i]);
-      dfs(xs[i], ys[i], p+1, dist+d);
-      picked[i] = false;
+int dfs(int ci, int cj) {
+  if (ncaptured == nb) return distance(ci, cj, starti, startj);
+  int cur = inf;
+  for (int i = 0; i < nb; i++)
+    if (not captured[i]) {
+      captured[i] = true;
+      ncaptured++;
+      cur = min(cur, distance(ci, cj, beepers[i][0], beepers[i][1]) + dfs(beepers[i][0], beepers[i][1]));
+      captured[i] = false;
+      ncaptured--;
     }
-  }
+  return cur;
 }
 
 int main() {
-  int tc; cin >> tc;
+  cin >> tc;
   while (tc--) {
-    int a, b; cin >> a >> b;
-    m = 1e6;
-    cin >> sx >> sy;
-    cin >> n;
-    for (int i = 0; i < n; i++) { cin >> xs[i] >> ys[i]; picked[i] = false; }
-    dfs(sx, sy, 0, 0);
-    cout << "The shortest path has length " << m << endl;
+    cin >> n >> m >> starti >> startj >> nb;
+    ncaptured = 0;
+    for (int i = 0; i < nb; i++) cin >> beepers[i][0] >> beepers[i][1];
+    cout << "The shortest path has length " << dfs(starti, startj) << endl;
   }
   return 0;
 }

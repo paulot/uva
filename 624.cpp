@@ -1,33 +1,32 @@
 #include <iostream>
+#include <cstring>
+#define get(p, i) ((p << i) % 2)
 
 using namespace std;
 
-int lengths[20], sum, n, t;
-bool took[20], ans[20];
+int n, m, songs[21], bs;
+bool picked[21], best[21];
 
-void dfs(int p) {
-  if (p == t) {
-    int csum = 0;
-    for (int i = 0; i < t; i++) if (took[i]) csum += lengths[i];
-    if (csum > sum and csum <= n) {
-      for (int i = 0; i < t; i++) ans[i] = took[i];
-      sum = csum;
-    }
-    return;
+void solve(int i, int s) {
+  if (s <= n and n - s < n - bs) {
+    bs = s;
+    memcpy(best, picked, sizeof(picked));
   }
-  took[p] = true;
-  dfs(p+1);
-  took[p] = false;
-  dfs(p+1);
+  if (s > n or i >= m) return;
+  picked[i] = true;
+  solve(i + 1, s + songs[i]);
+  picked[i] = false;
+  solve(i + 1, s);
 }
 
 int main() {
-  while (cin >> n >> t) {
-    for (int i = 0; i < t; i++) { cin >> lengths[i]; took[i] = false; }
-    sum = 0;
-    dfs(0);
-    for (int i = 0; i < t; i++) if (ans[i]) cout << lengths[i] << ' ';
-    cout << "sum:" << sum << endl;
+  while (cin >> n >> m) {
+    for (int i = 0; i < m; i++) cin >> songs[i];
+    bs = 0;
+    memset(best, 0, sizeof(best));
+    solve(0, 0);
+    for (int i = 0; i < 21; i++) if (best[i]) cout << songs[i] << ' ';
+    cout << "sum:" << bs << endl;
   }
   return 0;
 }

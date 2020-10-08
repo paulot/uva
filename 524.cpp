@@ -1,43 +1,39 @@
 #include <iostream>
-#include <cmath>
+#include <set>
 
 using namespace std;
 
-int nums[17];
-bool used[17];
-int n;
+int t, ps[] = {1, 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47}, n, nums[20];
+bool taken[20];
+set<int> primes(ps, ps + 16);
 
-bool is_prime(int num) {
-  for (int i = 2; i <= sqrt(num)+1; i++) if (num % i == 0) return false;
-  return num != 0;
-}
-
-void dfs(int p) {
-  if (p == n-1 and is_prime(nums[0]+nums[p])) {
-    for (int i = 0; i < n; i++) { cout << nums[i]; if (i != n-1) cout << ' '; }
-    cout << endl;
+void solve(int c) {
+  if (c == n) {
+    if (primes.find(nums[n-1] + nums[0]) != primes.end()) {
+      for (int i = 0; i < n; i++) {
+        cout << nums[i];
+        if (i != n - 1) cout << ' ';
+      } cout << endl;
+    }
     return;
-  } else if (p+1 < n) {
-    for (int i = 2; i <= n; i++) {
-      if (not used[i] and is_prime(i + nums[p])) {
-        used[i] = true;
-        nums[p+1] = i;
-        dfs(p+1);
-        used[i] = false;
-      }
+  }
+
+  for (int i = 1; i <= n; i++) {
+    if (not taken[i] and primes.find(i + nums[c - 1]) != primes.end()) {
+      taken[i] = true;
+      nums[c] = i;
+      solve(c + 1);
+      taken[i] = false;
     }
   }
 }
 
 int main() {
-  int tc = 1;
-  while (cin >> n) {
-    if (tc != 1) cout << endl;
-    for (int i = 0; i <= n; i++) used[i] = false;
-    cout << "Case " << tc++ << ':' << endl;
-    nums[0] = 1;
-    dfs(0);
-    if (n == 1) cout << 1 << endl;
+  nums[0] = 1; taken[1] = true;
+  while (cin >> n) { t++;
+    if (t != 1) cout << endl;
+    cout << "Case " << t << ":" << endl;
+    solve(1);
   }
   return 0;
 }

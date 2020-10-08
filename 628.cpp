@@ -2,34 +2,22 @@
 #include <string>
 
 using namespace std;
-string format;
-string dict[100];
-int fn, dn;
 
-void dfs(int fi, string str) {
-  if (fi == format.size()) {
-    cout << str << endl;
-    return;
-  }
 
-  if (format[fi] == '#') {
-    for (int i = 0; i < dn; i++) dfs(fi+1, str+dict[i]);
-  } else {
-    for (int i = 0; i <= 9; i++) dfs(fi+1, str+((char)(i+'0')));
-  }
+string words[101], pattern;
+int n, np;
+
+void bt(string c, int loc) {
+  if (loc == pattern.size()) cout << c << endl;
+  else if (pattern[loc] == '0') for (int i = 0; i < 10; i++) bt(c + ((char) ('0' + i)), loc + 1);
+  else for (int i = 0; i < n; i++) bt(c + words[i], loc + 1);
 }
 
 int main() {
-  while (cin >> dn) {
-    cout << "--\n";
-    for (int i = 0; i < dn; i++) cin >> dict[i];
-    cin >> fn;
-    for (int i = 0; i < fn; i++) {
-      cin >> format;
-      dfs(0, "");
-    }
+  while (cin >> n) {
+    for (int i = 0; i < n; i++) cin >> words[i];
+    cin >> np; cout << "--" << endl;
+    for (int i = 0; i < np; i++) { cin >> pattern; bt("", 0); }
   }
   return 0;
 }
-
-

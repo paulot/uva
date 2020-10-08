@@ -1,23 +1,22 @@
 #include <iostream>
 #include <cmath>
+#define goLeft(n) (n % 2 == 0)
 
 using namespace std;
 
-int d;
+int t, depth, in;
 
-int search(int cd, int num, int cnum) {
-  if (cd == d) return cnum;
-  int div = ceil(num/2.0);
-  return (num % 2 == 1) ? search(cd+1, div, cnum*2) : search(cd+1, div, cnum*2+1);
+int search(int d, int i, int cnum) {
+  if (d == depth) return cnum;
+  int div = ceil(i/2.0);
+  return goLeft(i) ? search(d + 1, div, cnum * 2 + 1) : search(d + 1, div, cnum * 2);
 }
 
 int main() {
-  int tc; cin >> tc;
-  while (tc--) {
-    int n; cin >> d;
-    if (d == -1) return 0;
-    cin >> n;
-    cout << search(1, n, 1) << endl;
+  cin >> t;
+  while (t--) {
+    cin >> depth >> in;
+    cout << search(1, in, 1) << endl;
   }
   return 0;
 }

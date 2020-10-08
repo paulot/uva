@@ -3,38 +3,32 @@
 
 using namespace std;
 
-int grid[100][100], dp[100][100];
-int n, m;
+int veryBest, grid[102][102], dp[102][102], n, m, tc;
+string name;
 
-int dfs(int i, int j) {
-  if (dp[i][j] != -1) return dp[i][j];
-  int mi = 0;
-  if (i > 0 and grid[i-1][j] < grid[i][j]) mi = max(dfs(i-1, j)+1, mi);
-  if (j > 0 and grid[i][j-1] < grid[i][j]) mi = max(dfs(i, j-1)+1, mi);
-  if (i < n-1 and grid[i+1][j] < grid[i][j]) mi = max(dfs(i+1, j)+1, mi);
-  if (j < m-1 and grid[i][j+1] < grid[i][j]) mi = max(dfs(i, j+1)+1, mi);
-  dp[i][j] = mi;
-  // cout << i << ' ' << j << ' ' << mi << endl;
-  return mi;
+
+int best(int row, int col) {
+  if (dp[row][col] != -1) return dp[row][col];
+
+  // Try up, down, left and right
+  int bestSoFar = 0;
+  if (grid[row - 1][col] < grid[row][col]) bestSoFar = max(bestSoFar, 1 + best(row - 1, col));
+  if (grid[row + 1][col] < grid[row][col]) bestSoFar = max(bestSoFar, 1 + best(row + 1, col));
+  if (grid[row][col - 1] < grid[row][col]) bestSoFar = max(bestSoFar, 1 + best(row, col - 1));
+  if (grid[row][col + 1] < grid[row][col]) bestSoFar = max(bestSoFar, 1 + best(row, col + 1));
+  veryBest = max(veryBest, bestSoFar);
+  return dp[row][col] = bestSoFar;
 }
 
-
 int main() {
-  int tc; cin >> tc;
+  cin >> tc;
   while (tc--) {
-    string name; cin >> name >> n >> m;
-    for (int i = 0; i < n; i++) {
-      for (int j = 0; j < m; j++) {
-        dp[i][j] = -1;
-        cin >> grid[i][j];
-      }
-    }
-    int mi = 0;
-    for (int i = 0; i < n; i++)
-      for (int j = 0; j < m; j++)
-        mi = max(mi, dfs(i, j));
-
-    cout << name << ": " << mi+1 << endl;
+    cin >> name >> n >> m;
+    veryBest = 0;
+    for (int i = 0; i < 102; i++) for (int j = 0; j < 102; j++) grid[i][j] = 200, dp[i][j] = -1;
+    for (int i = 1; i <= n; i++) for (int j = 1; j <= m; j++) cin >> grid[i][j];
+    for (int i = 1; i <= n; i++) for (int j = 1; j <= m; j++) best(i, j);
+    cout << name << ": " << 1 + veryBest << endl;
   }
   return 0;
 }

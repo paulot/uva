@@ -2,25 +2,34 @@
 
 using namespace std;
 
-int dp[1001][31], family[31], weights[1001], prices[1001], no, np, tc;
+/**
+ * The idea behind this solution is to runs a regular 01 knapsack
+ * and add all of the best weights to a running total value This total
+ * will represent the total that the family can carry.
+ */
+
+int t, n, w, m, prices[1001], weights[1001], dp[1001][31];
 
 int main() {
-  cin >> tc;
-  while (tc--) {
-    cin >> no;
-    for (int i = 1; i <= no; i++) cin >> prices[i] >> weights[i];
-    cin >> np;
-    for (int i = 0; i < np; i++) cin >> family[i];
-    for (int i = 0; i <= no; i++) for (int j = 0; j <= 30; j++) dp[i][j] = 0;
+  cin >> t;
+  while (t--) {
+    cin >> n;
+    for (int i = 1; i <= n; i++) cin >> prices[i] >> weights[i];
+    cin >> m;
 
-    for (int i = 1; i <= no; i++)
-      for (int j = 1; j <= 30; j++)
-        if (j >= weights[i])
-          dp[i][j] = max(dp[i-1][j-weights[i]] + prices[i], dp[i-1][j]);
-        else dp[i][j] = dp[i-1][j];
+    for (int item = 1; item <= n; item++) {
+      for (int weight = 0; weight <= 30; weight++) {
+        if (weights[item] > weight) dp[item][weight] = dp[item-1][weight];
+        else dp[item][weight] = max(dp[item-1][weight], prices[item] + dp[item-1][weight-weights[item]]);
+      }
+    }
 
     long long total = 0;
-    for (int i = 0; i < np; i++) total += dp[no][family[i]];
+    for (int k = 0; k < m; k++) {
+      cin >> w;
+      total += dp[n][w];
+    }
+
     cout << total << endl;
   }
   return 0;

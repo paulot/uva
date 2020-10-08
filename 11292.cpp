@@ -1,27 +1,31 @@
-#include <algorithm>
 #include <iostream>
+#include <algorithm>
+#include <vector>
 
 using namespace std;
 
-int heads[20000], knights[20000];
+int n, m, in;
+vector<int> heads, knights;
 
 int main() {
-  int n, m;
-  while (cin >> n >> m and (n != 0 or m != 0)) {
-    for (int i = 0; i < n; i++) cin >> heads[i];
-    for (int i = 0; i < m; i++) cin >> knights[i];
+  while (cin >> n >> m and n and m) {
+    heads.clear();
+    knights.clear();
+    for (int i = 0; i < n; i++) { cin >> in; heads.push_back(in); }
+    for (int i = 0; i < m; i++) { cin >> in; knights.push_back(in); }
+    sort(knights.begin(), knights.end());
+    sort(heads.begin(), heads.end());
 
-    sort(heads, heads+n);
-    sort(knights, knights+m);
+    int gold = 0;
+    bool solved = true;
+    for (int i = 0; i < heads.size() and solved; i++) {
+      auto it = lower_bound(knights.begin(), knights.end(), heads[i]);
 
-    int k = 0, price = 0;
-    bool ok = true;
-    for (int i = 0; i < n; i++) {
-      while(k < m and knights[k] < heads[i]) k++;
-      if (k >= m) { ok = false; break; }
-      else { price += knights[k], k++; }
+      if (it == knights.end()) solved = false;
+      else { gold += *it; knights.erase(it); }
     }
-    if (ok) cout << price << endl;
+
+    if (solved) cout << gold << endl;
     else cout << "Loowater is doomed!" << endl;
   }
   return 0;

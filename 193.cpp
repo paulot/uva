@@ -1,69 +1,53 @@
 #include <iostream>
-#include <set>
-#include <map>
-#include <queue>
+#include <cstring>
 
 using namespace std;
 
-enum colors { black = 0, white = 1, plain = 2 };
+int n, m, k, best, a, b;
+bool graph[101][101], black[101], visited[101], bb[101];
 
-int n, k;
-bool graph[101][101];
-colors color[101];
-set <int> nodes;
-
-bool can_add(int node) {
-  for (int i = 1; i <= n; i++) {
-    if (graph[node][i] and color[i] == black)
-      return false;
-  }
+bool canBeBlack(int node) {
+  for (int i = 1; i <= n; i++) if (graph[node][i] and black[i]) return false;
   return true;
 }
 
-void dfs(int node) {
-  if (node == n+1) {
-    int count = 0;
-    for (int i = 1; i <= n; i++) if (color[i] == black) count++;
-    if (nodes.size() < count) {
-      nodes.clear();
-      for (int i = 1; i <= n; i++) if (color[i] == black) nodes.insert(i);
+void dfs(int node, int nb) {
+  visited[node] = true;
+
+  if (node == n + 1) {
+    if (best < nb) {
+      best = nb;
+      memcpy(bb, black, sizeof(black));
     }
     return;
   }
 
-  if (can_add(node)) {
-    color[node] = black;
-    dfs(node+1);
+  if (canBeBlack(node)) {
+    black[node] = true;
+    dfs(node + 1, nb + 1);
+    black[node] = false;
   }
-  color[node] = white;
-  dfs(node+1);
-}
 
-void solve() {
-  nodes.clear();
-  for (int i = 1; i <= n; i++) color[i] = plain;
-  dfs(1);
+  dfs(node + 1, nb);
+  visited[node] = false;
 }
 
 int main() {
-  int m; cin >> m;
+  cin >> m;
   while (m--) {
     cin >> n >> k;
+    memset(graph, 0, sizeof(graph));
+    for (int i = 1; i <= k; i++) { cin >> a >> b; graph[a][b] = true; graph[b][a] = true; }
+    
+    dfs(1, 0);
+    cout << best << endl;
     for (int i = 1; i <= n; i++)
-    for (int j = 1; j <= n; j++)
-      graph[i][j] = false;
+      if (bb[i]) {
+        best--;
+        cout << i;
+        if (best != 0) cout << ' ';
+      }
 
-    for (int i = 0; i < k; i++) {
-      int a, b; cin >> a >> b;
-      graph[a][b] = true;
-      graph[b][a] = true;
-    }
-
-    solve();
-    cout << nodes.size() << endl;
-    auto last = nodes.end(); last--;
-    for (auto it = nodes.begin(); it != nodes.end(); it++)
-      cout << *it << ((it == last) ? "" : " ");
     cout << endl;
   }
   return 0;

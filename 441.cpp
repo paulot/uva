@@ -2,22 +2,17 @@
 
 using namespace std;
 
-int nums[49], n;
+int j, k, s[14];
 
 int main() {
-  int t = 0;
-  while (cin >> n) {
-    if (n != 0 and t++ != 0) cout << endl;
-    for (int i = 0; i < n; i++) cin >> nums[i];
-
-    for (int i1 = 0; i1 < n-5; i1++)
-    for (int i2 = i1+1; i2 < n-4; i2++)
-    for (int i3 = i2+1; i3 < n-3; i3++)
-    for (int i4 = i3+1; i4 < n-2; i4++)
-    for (int i5 = i4+1; i5 < n-1; i5++)
-    for (int i6 = i5+1; i6 < n; i6++)
-      cout << nums[i1] << ' ' << nums[i2] << ' ' << nums[i3] << ' '
-           << nums[i4] << ' ' << nums[i5] << ' ' << nums[i6] << endl;
+  while (cin >> k and k) {
+    if (j++ > 0) cout << endl;
+    for (int i = 0; i < k; i++) cin >> s[i];
+    for (int a1 = 0; a1 < k; a1++) for (int a2 = a1 + 1; a2 < k; a2++)
+    for (int a3 = a2 + 1; a3 < k; a3++) for (int a4 = a3 + 1; a4 < k; a4++)
+    for (int a5 = a4 + 1; a5 < k; a5++) for (int a6 = a5 + 1; a6 < k; a6++)
+      cout << s[a1] << ' ' << s[a2] << ' ' << s[a3] << ' ' << s[a4] << ' ' << s[a5] << ' ' << s[a6] << endl;
   }
   return 0;
 }
+
