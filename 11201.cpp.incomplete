@@ -1,0 +1,75 @@
+#include <iostream>
+#include <set>
+#include <string>
+#include <cstring>
+#define P(c) (probs[c - 'a'])
+
+using namespace std;
+
+
+int n, usages[30], num;
+string in, odd = "bcdfghjklmnpqrstvwxyz", even = "aeiou";
+double probs[30] = { 12.53, 1.42, 4.68, 5.86, 13.68, 0.69, 1.01, 0.70, 6.25, 0.44, 0.00, 4.97, 3.15,
+                     6.71, 8.68, 2.51, 0.88, 6.87, 7.98, 4.63, 3.93, 0.90, 0.02, 0.22, 0.90, 0.52 };
+
+
+double dfs(int ind, int end) {
+  if (ind > end) {
+    num++;
+    return 0;
+  }
+
+  double total = 0;
+
+  if (ind % 2 == 0) {
+    for (int i = 0; i < even.size(); i++) {
+      if (usages[even[i] - 'a'] < 2) {
+        usages[even[i] - 'a']++;
+        total += ind * P(even[i]) + dfs(ind + 1, end);
+        usages[even[i] - 'a']--;
+      }
+    }
+  } else {
+    for (int i = 0; i < odd.size(); i++) {
+      if (usages[odd[i] - 'a'] < 2) {
+        usages[odd[i] - 'a']++;
+        total += ind * P(odd[i]) + dfs(ind + 1, end);
+        usages[odd[i] - 'a']--;
+      }
+    }
+  }
+  return total;
+}
+
+double rating() {
+  double total = 0;
+  for (int i = 0; i < in.size(); i++)
+    total += (i + 1) * P(in[i]);
+
+  return total;
+}
+
+int main() {
+  cin >> n;
+  for (int i = 0; i < n; i++) {
+    cin >> in;
+    num = 0;
+    memset(usages, 0, sizeof(usages));
+    usages[in[0] - 'a']++;
+    double average = dfs(2, in.size());
+    average += num * P(in[0]);
+    double r = rating();
+    cout << in.size() << ' ' << average << ' ' << num  << ' ' << average/num << ' ' << r << endl;
+    average /= num;
+    if (r < average) cout << "below" << endl;
+    else cout << "above or equal" << endl;
+  }
+  return 0;
+}
+
+
+
+
+
+
+

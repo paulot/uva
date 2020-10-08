@@ -1,0 +1,29 @@
+#include <iostream>
+
+using namespace std;
+
+int k, q, m;
+
+bool isMoveAllowed(int thresh) {
+  int qrow = q / 8, qcol = q % 8;
+  int mrow = m / 8, mcol = m % 8;
+  int krow = k / 8, kcol = k % 8;
+  if (qrow == mrow and qrow == krow) {
+    if (qcol < mcol and mcol < kcol - thresh) return true;
+    if (qcol > mcol and mcol  > kcol + thresh) return true;
+  } else if (qcol == mcol and qcol == kcol) {
+    if (qrow < mrow and qrow < krow - thresh) return true;
+    if (qrow > mrow and mrow > krow + thresh) return true;
+  }
+  return false;
+}
+
+int main() {
+  while (cin >> k >> q >> m) {
+    if (k == q) cout << "Illegal state" << endl;
+    else if (not isMoveAllowed(0)) cout << "Illegal move" << endl;
+    else if (not isMoveAllowed(1)) cout << "Move not allowed" << endl;
+    else cout << "idk" << endl;
+  }
+  return 0;
+}

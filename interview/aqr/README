@@ -1,0 +1,17 @@
+Running:
+  python3 pnl.py <prices file> <fills file>
+
+Assumptions:
+  Prices file is correctly formatted and only contains price updates.
+  Fills file is correctly formatted and only contains fill messages.
+  Both passed in files exist.
+  Fill orders are given precedence over price updates.
+    Meaning if a fill order and a price update come at the same time
+    the fill order will be executed first, then the pnl will be printed.
+
+Inner workings:
+  Read both files and generate a stream of messages in chronological order.
+    Fill orders are given precedence.
+
+  Process each message in chronological order, and maintain the running sum
+  of quantity and total money spent for each position.
